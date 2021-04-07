@@ -100,9 +100,9 @@ unsigned long targetTicks;
 /*
     Alex's Environmental Info.
 */
-Adafruit_TCS34725 tcs = Adafruit_TCS34725();
+Adafruit_TCS34725 tcs = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_50MS, TCS34725_GAIN_16X);
 //data type depends
-volatile unsigned long color = 2;
+volatile unsigned long color;
 unsigned long flame;
 unsigned long gas;
 
@@ -151,7 +151,7 @@ void setupPowerSaving()
   WDT_off();
 
   //Modify PRR to shut down TWI
-  PRR |= PRR_TWI_MASK;
+  //PRR |= PRR_TWI_MASK;
 
   //Modify PRR to shut down SPI
   PRR |= PRR_SPI_MASK;
@@ -705,7 +705,7 @@ void handleCommand(TPacket *command)
       break;
     case COMMAND_GET_COLOR:
       sendOK();
-      //getColor();
+      getColor();
       sendColor();
       break;
     default:
@@ -747,13 +747,16 @@ void waitForHello()
 }
 
 void getColor() {
-    uint16_t r, g, b, c;
-    tcs.getRawData(&r, &g, &b, &c);
+    float r, g, b;
+    tcs.getRGB(&r, &g, &b);
+//    dbprint("Red: ");
+//    dbprint((char)(r + '0'));
+//    dbprint("\n");
 
-    if (g > 180 && r < 100 && b < 100) {
-        color = 2;
-    } else if (r > 180 && g < 100 && b < 100) {
-        color = 1;
+    if (r > 100 && g < 80 && b < 70) {
+        color = 2; //red
+    } else if (r < 100 && g > 90 && b < 80) {
+        color = 1; //green
     } else {
         color = 0;
     }
@@ -824,7 +827,7 @@ void handlePacket(TPacket *packet)
 
 void loop() {
   
-  //  getColor();
+  //getColor();
 
   // put your main code here, to run repeatedly:
   TPacket recvPacket; // This holds commands from the Pi

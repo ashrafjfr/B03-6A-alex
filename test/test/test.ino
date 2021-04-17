@@ -10,8 +10,8 @@ Connect VDD to 3.3V DC
 Connect GROUND to common ground */
  
 /* Initialise with default values (int time = 2.4ms, gain = 1x) */
-//Adafruit_TCS34725 tcs = Adafruit_TCS34725();
-Adafruit_TCS34725 tcs = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_50MS, TCS34725_GAIN_4X);
+///Adafruit_TCS34725 tcs = Adafruit_TCS34725();
+Adafruit_TCS34725 tcs = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_50MS, TCS34725_GAIN_16X);
 
  
 void setup(void) {
@@ -28,6 +28,14 @@ while (1);
 }
  
 void loop(void) {
+float r,g,b;
+tcs.getRGB(&r,&g,&b);
+Serial.print("R: "); Serial.print(r); Serial.print(" ");
+Serial.print("G: "); Serial.print(g); Serial.print(" ");
+Serial.print("B: "); Serial.print(b); Serial.print(" ");
+Serial.println();
+
+/*
 uint16_t r, g, b, c, colorTemp, lux;
  
 tcs.getRawData(&r, &g, &b, &c);
@@ -41,4 +49,5 @@ Serial.print("G: "); Serial.print(g, DEC); Serial.print(" ");
 Serial.print("B: "); Serial.print(b, DEC); Serial.print(" ");
 Serial.print("C: "); Serial.print(c, DEC); Serial.print(" ");
 Serial.println(" ");
+*/
 }

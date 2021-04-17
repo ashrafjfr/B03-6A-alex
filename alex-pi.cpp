@@ -53,8 +53,16 @@ void handleStatus(TPacket *packet)
 
 void handleColor(TPacket *packet)
 {
-    printf("\n ------- ALEX Color REPORT ------- \n\n");
-    printf("Color:\t\t%d\n", packet->params[0]);
+	char c;
+	if (packet->params[0] == 2) {
+		c = 'R';
+	} else if (packet->params[0] == 1) {
+		c = 'G';
+	} else {
+		c = 'O';
+	}
+    printf("\n ------- ALEX COLOR REPORT ------- \n\n");
+    printf("Color:\t\t%c\n", c);
     printf("\n---------------------------------------\n\n");
 }
 
@@ -195,6 +203,13 @@ void sendCommand(char command)
 
 	switch(command)
 	{
+        case 'h':
+        case 'H':
+            commandPacket.params[0] = 20;
+            commandPacket.params[1] = 100;
+            commandPacket.command = COMMAND_FORWARD;
+            sendPacket(&commandPacket);
+            break;
         case 'w':
         case 'W':
             commandPacket.params[0] = 5;
@@ -211,14 +226,14 @@ void sendCommand(char command)
             break;
         case 'a':
         case 'A':
-            commandPacket.params[0] = 3;
+            commandPacket.params[0] = 5;
             commandPacket.params[1] = 100;
             commandPacket.command = COMMAND_TURN_LEFT;
             sendPacket(&commandPacket);
             break;
         case 'd':
         case 'D':
-            commandPacket.params[0] = 3;
+            commandPacket.params[0] = 5;
             commandPacket.params[1] = 75;
             commandPacket.command = COMMAND_TURN_RIGHT;
             sendPacket(&commandPacket);
